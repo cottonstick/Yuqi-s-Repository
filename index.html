@@ -3,80 +3,104 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>上市公司新闻与财报周报</title>
+    <title>你画我猜 · AI 在线猜图</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="page">
       <header class="hero">
         <div>
-          <p class="eyebrow">一站式信息助手</p>
-          <h1>上市公司新闻与财报周报</h1>
+          <p class="eyebrow">AI 互动小游戏</p>
+          <h1>你画我猜 · 在线画板</h1>
           <p class="subtitle">
-            输入公司名称或股票代码，快速获取最近一周的新闻摘要、财报亮点与市场情绪概览。
+            玩家在画布上作画，AI 使用 ChatGPT API 来猜是什么。
+            支持自定义题目、画笔、颜色与笔刷粗细，随时清空或撤销。
           </p>
+          <div class="prompt-card">
+            <div>
+              <span class="label">当前题目</span>
+              <strong id="current-prompt">小狗</strong>
+            </div>
+            <button type="button" id="next-prompt">换一个题目</button>
+          </div>
         </div>
         <div class="hero-card">
-          <h2>快速开始</h2>
-          <form id="search-form">
-            <label for="company" class="field-label">公司名称 / 股票代码</label>
-            <div class="field-row">
-              <input
-                id="company"
-                name="company"
-                type="text"
-                placeholder="例如：腾讯 / 0700.HK"
-                autocomplete="off"
-                required
-              />
-              <button type="submit">生成周报</button>
-            </div>
-            <p class="helper">支持拼音、中文或交易所代码。点击按钮即可生成示例周报。</p>
-          </form>
+          <h2>连接 ChatGPT API</h2>
+          <label class="field-label" for="api-key">OpenAI API Key</label>
+          <input
+            id="api-key"
+            type="password"
+            placeholder="sk-..."
+            autocomplete="off"
+          />
+          <p class="helper">
+            建议通过后端代理调用 API，避免在浏览器暴露密钥。
+            没有密钥也可体验本地猜测模式。
+          </p>
+          <label class="field-label" for="model">模型</label>
+          <input id="model" type="text" value="gpt-4o-mini" />
+          <button type="button" id="guess-button">让 AI 来猜</button>
         </div>
       </header>
 
-      <section class="grid" id="results">
-        <article class="card">
-          <div class="card-title">最近一周新闻</div>
-          <ul class="card-list" id="news-list">
-            <li>请输入公司名称后生成新闻摘要。</li>
-          </ul>
-        </article>
-
-        <article class="card">
-          <div class="card-title">财报摘要</div>
-          <div class="card-body" id="earnings-summary">
-            <p>系统将自动提炼营收、利润、指引及关键业务亮点。</p>
+      <section class="board">
+        <div class="canvas-wrapper">
+          <canvas id="draw-canvas" width="960" height="540"></canvas>
+        </div>
+        <div class="tool-panel">
+          <h3>画笔工具</h3>
+          <div class="tool-row">
+            <label class="field-label" for="brush-color">颜色</label>
+            <input id="brush-color" type="color" value="#111827" />
           </div>
-        </article>
-
-        <article class="card">
-          <div class="card-title">市场情绪与关注点</div>
-          <div class="card-body" id="sentiment-summary">
-            <p>结合新闻热度、分析师观点与投资者讨论生成本周情绪摘要。</p>
+          <div class="tool-row">
+            <label class="field-label" for="brush-size">粗细</label>
+            <input id="brush-size" type="range" min="2" max="28" value="10" />
           </div>
-          <div class="tag-row" id="sentiment-tags"></div>
-        </article>
+          <div class="tool-actions">
+            <button type="button" id="undo">撤销</button>
+            <button type="button" id="clear">清空画布</button>
+          </div>
+          <div class="tool-row">
+            <label class="field-label" for="custom-prompt">自定义题目</label>
+            <input
+              id="custom-prompt"
+              type="text"
+              placeholder="例如：热气球 / 机器人"
+            />
+            <button type="button" id="set-prompt">设置题目</button>
+          </div>
+          <div class="tips">
+            <p>提示：画出关键轮廓或特征会更容易被 AI 猜中。</p>
+            <p>画完后点击“让 AI 来猜”获取结果。</p>
+          </div>
+        </div>
       </section>
 
-      <section class="stack">
-        <article class="card wide">
-          <div class="card-title">数据来源与下一步</div>
+      <section class="results">
+        <article class="card">
+          <div class="card-title">AI 猜测结果</div>
           <div class="card-body">
-            <ol>
-              <li>在后端接入新闻 API、交易所公告或财报解析服务。</li>
-              <li>将分析逻辑部署为服务，返回结构化 JSON 数据。</li>
-              <li>可选：增加订阅功能，每周定时发送摘要邮件。</li>
-            </ol>
+            <p id="status">等待玩家作画。</p>
+            <ol id="guess-list" class="guess-list"></ol>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-title">本局要点</div>
+          <div class="card-body" id="round-summary">
+            <ul>
+              <li>题目：<span id="summary-prompt">小狗</span></li>
+              <li>画布大小：<span id="canvas-size">960 × 540</span></li>
+              <li>建议：多画轮廓、增加标志性细节。</li>
+            </ul>
           </div>
         </article>
       </section>
     </main>
 
     <footer class="footer">
-      <span>© 2025 上市公司情报助手</span>
-      <span>演示版 · 仅用于界面展示</span>
+      <span>© 2025 你画我猜 · AI 体验版</span>
+      <span>演示用途 · 前端直连 API</span>
     </footer>
 
     <script src="app.js"></script>
