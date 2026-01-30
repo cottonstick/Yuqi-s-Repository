@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>上市公司新闻与财报周报</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">一站式信息助手</p>
+          <h1>上市公司新闻与财报周报</h1>
+          <p class="subtitle">
+            输入公司名称或股票代码，快速获取最近一周的新闻摘要、财报亮点与市场情绪概览。
+          </p>
+        </div>
+        <div class="hero-card">
+          <h2>快速开始</h2>
+          <form id="search-form">
+            <label for="company" class="field-label">公司名称 / 股票代码</label>
+            <div class="field-row">
+              <input
+                id="company"
+                name="company"
+                type="text"
+                placeholder="例如：腾讯 / 0700.HK"
+                autocomplete="off"
+                required
+              />
+              <button type="submit">生成周报</button>
+            </div>
+            <p class="helper">支持拼音、中文或交易所代码。点击按钮即可生成示例周报。</p>
+          </form>
+        </div>
+      </header>
+
+      <section class="grid" id="results">
+        <article class="card">
+          <div class="card-title">最近一周新闻</div>
+          <ul class="card-list" id="news-list">
+            <li>请输入公司名称后生成新闻摘要。</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="card-title">财报摘要</div>
+          <div class="card-body" id="earnings-summary">
+            <p>系统将自动提炼营收、利润、指引及关键业务亮点。</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-title">市场情绪与关注点</div>
+          <div class="card-body" id="sentiment-summary">
+            <p>结合新闻热度、分析师观点与投资者讨论生成本周情绪摘要。</p>
+          </div>
+          <div class="tag-row" id="sentiment-tags"></div>
+        </article>
+      </section>
+
+      <section class="stack">
+        <article class="card wide">
+          <div class="card-title">数据来源与下一步</div>
+          <div class="card-body">
+            <ol>
+              <li>在后端接入新闻 API、交易所公告或财报解析服务。</li>
+              <li>将分析逻辑部署为服务，返回结构化 JSON 数据。</li>
+              <li>可选：增加订阅功能，每周定时发送摘要邮件。</li>
+            </ol>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>© 2025 上市公司情报助手</span>
+      <span>演示版 · 仅用于界面展示</span>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
